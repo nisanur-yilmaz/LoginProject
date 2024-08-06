@@ -1,0 +1,112 @@
+@page
+@model LoginProject2.Pages.sign_up
+@{
+ViewData["Title"] = "Home page";
+}
+@section css
+{
+<style xmlns="http://www.w3.org/1999/html">
+    div{
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+
+    }
+    .form-Name-Password-PasswordAgain-genderId{
+        align-items: flex-start;
+
+    }
+    .gender
+    {
+        margin-top: 10px;
+        align-items: flex-start;
+        flex-direction: row;
+    }
+    .input1{
+        width: 700px;
+        height: 30px;
+        border:1px solid #e6e6e6;
+    }
+    h1{
+
+        color: red;
+        font-size: 60px;
+        margin: auto;
+        padding: 10px;
+    }
+    li{
+        position: absolute;
+        left: 45px;
+        top: 30px;
+    }
+    small{
+        color: red;
+    }
+    .smallN{
+        color: #198754;
+    }
+    .buttonSubmit{
+        padding: 12px;
+        background: red;
+        color:white;
+        border-radius: 5px;
+        border: red;
+        margin-top: 5px;
+    }
+    .buttonSubmit:hover{
+        padding: 12px;
+        color:white;
+        border-radius: 5px;
+        background: peru;
+        margin-top: 5px;
+    }
+    label{
+        margin-bottom: 5px;
+    }
+
+
+</style>
+}
+<div>
+    <h1>Sign Up</h1>
+</div>
+<form method="post" asp-page="sign up">
+    <div class="form-Name-Password-PasswordAgain-genderId">
+        <label asp-for="Name"></label>
+        <input class="input1"asp-for="Name" placeholder="Enter Name" autocomplete="off"/>
+        <small>@TempData["Name.Error"]</small>
+        <small>@TempData["UserName.Error"]</small>
+        <small>@TempData["no"]</small>
+        <small class="smallN">@TempData["Welcome"]</small>
+
+
+    </div>
+    <div class="form-Name-Password-PasswordAgain-genderId">
+        <label asp-for="Password"></label>
+        <input class="input1"asp-for="Password" placeholder="Enter Password" autocomplete="off" type="Password"/>
+        <small>@TempData["Password.Error"]</small>
+
+
+    </div>
+    <div class="form-Name-Password-PasswordAgain-genderId">
+        <label asp-for="PasswordAgain"></label>
+        <input class="input1" asp-for="PasswordAgain" placeholder="Enter Password Again" autocomplete="off"type="password"/>
+        <small>@TempData["PasswordAgain.Error"]</small>
+        <small>@TempData["stop"]</small>
+    </div>
+    <div class="gender">
+        <label asp-for="Gender"></label>
+        <input asp-for="Gender" autocomplete="off" type="radio" value="1">
+        erkek
+        <input asp-for="Gender" autocomplete="off" type="radio" value="2">
+        kadın
+        <small class="form-Name-Password-PasswordAgain-genderId">@TempData["Gender.Error"]</small>
+    </div>
+    
+
+    <button type="submit" class="buttonSubmit">
+        Submit
+    </button>
+
+
+</form>

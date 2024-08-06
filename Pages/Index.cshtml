@@ -1,0 +1,88 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+@section css
+{
+    <style>
+    div {
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+    }
+
+    h1 {
+        margin: auto;
+        padding: 40px;
+        font-size: 60px;
+        color: #258cfb;
+
+    }
+    small
+    {
+        color: red;
+    }
+    
+
+    .form-Name-Password {
+        align-items: flex-start;
+    }
+
+    .buttonSubmit {
+        color: white;
+        padding: 12px;
+        border: #258cfb;
+        border-radius: 5px;
+        margin-top: 5px;
+        background: #258cfb;
+    }
+
+    .buttonSubmit:hover {
+        color: white;
+        padding: 12px;
+        border: #258cfb;
+        border-radius: 5px;
+        margin-top: 5px;
+        background: peru;
+    }
+    input
+    {
+        width: 700px;
+        height: 30px;
+        border: 1px solid #e6e6e6;
+    }
+    li
+    {
+        margin-right: 1000px;
+    }
+    label
+    {
+        padding-bottom: 5px;
+    }
+
+
+</style>
+}
+
+<div class="div">
+    <h1> Log in </h1>
+</div>
+<form method="post" asp-page="Index">
+    <div class="form-Name-Password">
+        <label asp-for="Name"></label>
+        <input asp-for="Name" placeholder="Enter Name" autocomplete="off"/>
+        <small>@TempData["Name.Error"]</small>
+    </div>
+    <div class="form-Name-Password">
+        <label asp-for="Password"></label>
+        <input asp-for="Password" placeholder="Enter Password" autocomplete="off" type="password"/>
+        <small>@TempData["Password.Error"]</small>
+    </div>
+    <button type="submit" class="buttonSubmit">
+        Submit
+    </button>
+    <small>@TempData["Error"]</small>
+    <small class="small">@TempData["stop"]</small>
+    
+</form>

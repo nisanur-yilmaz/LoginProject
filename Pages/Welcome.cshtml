@@ -1,0 +1,102 @@
+@page
+@model LoginProject2.Pages.Welcome
+
+<h1>@($"Welcome {Model.Name}{Model.Gender}")</h1>
+
+@section css
+{
+    <style xmlns="http://www.w3.org/1999/html">
+        [hidden] {
+            display: none !important;
+        }
+
+        div
+        {
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+        }
+        .h1B
+        {
+            font-size: 60px;
+            color: limegreen;
+            margin: auto;
+            padding:10px;
+        }
+        .SaveButton
+        {
+            padding: 12px;
+            background: limegreen;
+            color: white;
+            border-radius: 5px;
+            border: limegreen;
+            margin-top: 5px;
+        }
+        .SaveButton:hover
+        {
+            padding: 12px;
+            background: peru;
+            color: white;
+            border-radius: 5px;
+            margin-top: 5px;
+        }
+        .input1
+        {
+            width: 700px;
+            height: 30px;
+            border: 1px solid #e6e6e6;
+        }
+        label
+        {
+            margin-bottom: 5px;
+        }
+        small
+        {
+            color: red;
+        }
+        .smallTrue
+        {
+            color: limegreen;
+        }
+        li
+        {
+            position: absolute;
+            left: 45px;
+            top: 30px;
+        }
+        .Form-password-passwordAgain
+        {
+            align-items: flex-start;
+        }
+        
+    
+    </style>
+}
+
+<div>
+    <h1 class="h1B">Change Password</h1>
+</div>
+<form method="post" asp-page="Welcome">
+    <div hidden>
+        <label asp-for="Name"></label>
+        <input class="input1" asp-for="Name"/>@Model.Name
+    </div>
+    
+    <div class="Form-password-passwordAgain">
+        <label asp-for="Password"></label>
+        <input class="input1" asp-for="Password" placeholder="Enter New Password" autocomplete="off" type="password"/>
+        <small>@TempData["Password.Error"]</small>
+    </div>
+
+    <div class="Form-password-passwordAgain">
+        <label asp-for="PasswordAgain"></label>
+        <input class="input1"asp-for="PasswordAgain" placeholder="Enter New Password Again" autocomplete="off" type="password"/>
+        <small>@TempData["PasswordAgain.Error"]</small>
+        <small>@TempData["stop"]</small>
+    </div>
+    <button type="submit" class="SaveButton">
+        Save
+    </button>
+    <small class="smallTrue">@TempData["PasswordTrue"]</small>
+
+</form>
