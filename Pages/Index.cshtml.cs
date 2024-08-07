@@ -33,13 +33,27 @@ public class IndexModel : PageModel
             TempData["Password.Error"] = "Password cannot be empty";
         }
         var result = appDbContext.RunSqlCommand("SELECT * FROM user");
-        for (int i = 0; i <=result.Count-1; i++)
+        /*for (int i = 0; i <=result.Count-1; i++)
         {
             if (Name == result[i][0] && password == result[i][2])
             {
                 TempData["stop"] = "";
                 return RedirectToPage("Welcome" , new{name=$"{Name}", gender=$"{result[i][3]}"} );
 
+            }
+            else
+            {
+                TempData["stop"] = "username and password are incorrect";
+            }
+        }*/
+
+        foreach (var row in result)
+        {
+            if (Name == row[0] && password == row[2])
+            {
+                TempData["stop"] = "";
+                return RedirectToPage("Welcome" , new{name=$"{Name}", gender=$"{row[3]}"} );
+ 
             }
             else
             {

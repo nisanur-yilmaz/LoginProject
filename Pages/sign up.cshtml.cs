@@ -58,26 +58,23 @@ public class sign_up : PageModel
                 var symbolFound = false;
                 foreach (var letter in Password)
                 {
-                    int letterCode = (int)letter;
-                    if (letter >= '0' && letter <= '9')
+                    switch (letter)
                     {
-                        digitFound = true;
-                    }
-
-                    if (letter >= 'a' && letter <= 'z')
-                    {
-                        lowerCaseFound = true;
-                    }
-
-                    if (letter >= 'A' && letter <= 'Z')
-                    {
-                        upperCaseFound = true;
-                    }
-                    else
-                    {
-                        symbolFound = true;
+                        case >= '0' and <= '9':
+                            digitFound = true;
+                            break;
+                        case >= 'a' and <= 'z':
+                            lowerCaseFound = true;
+                            break;
+                        case >= 'A' and <= 'Z':
+                            upperCaseFound = true;
+                            break;
+                        default:
+                            symbolFound = true;
+                            break;
                     }
                 }
+
 
                 if (!digitFound || !lowerCaseFound || !upperCaseFound || !symbolFound)
                 {
@@ -110,7 +107,7 @@ public class sign_up : PageModel
         {
             var kullanıcıvar = false;
             var result = appDbContext.RunSqlCommand("SELECT * FROM user");
-            for (int i = 0; i <= result.Count-1; i++)
+            for (int i = 0; i <= result.Count - 1; i++)
             {
                 if (Name == result[i][0])
                 {
@@ -127,12 +124,11 @@ public class sign_up : PageModel
             {
                 TempData["Welcome"] = $"Welcome {Name}!";
                 TempData["Stop"] = "";
-                appDbContext.RunSqlCommand($"INSERT INTO user(userName,password,gender_id)values(\"{Name}\",\"{Password}\",{Gender})");
+                appDbContext.RunSqlCommand(
+                    $"INSERT INTO user(userName,password,gender_id)values(\"{Name}\",\"{Password}\",{Gender})");
             }
-
         }
 
         return RedirectToPage("sign up");
-     }
-
-  }
+    }
+}
