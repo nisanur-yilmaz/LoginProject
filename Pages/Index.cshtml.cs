@@ -17,7 +17,18 @@ public class IndexModel : PageModel
     }
     public void OnGet()
     {
+        SayHello("necip");
     }
+    
+    // tanımla
+    static void SayHello(string SayHello)
+    {
+        Console.WriteLine("Welcome " + SayHello+"!");
+    }
+
+    
+    
+    
 
     public IActionResult OnPost([FromForm] string Name, [FromForm] string password)
     {
@@ -37,13 +48,13 @@ public class IndexModel : PageModel
         {
             if (Name == result[i][0] && password == result[i][2])
             {
-                TempData["stop"] = "";
+                TempData["Stop"] = "";
                 return RedirectToPage("Welcome" , new{name=$"{Name}", gender=$"{result[i][3]}"} );
 
             }
             else
             {
-                TempData["stop"] = "username and password are incorrect";
+                TempData["Stop"] = "username and password are incorrect";
             }
         }*/
 
@@ -51,13 +62,13 @@ public class IndexModel : PageModel
         {
             if (Name == row[0] && password == row[2])
             {
-                TempData["stop"] = "";
+                TempData["Stop"] = "";
                 return RedirectToPage("Welcome" , new{name=$"{Name}", gender=$"{row[3]}"} );
  
             }
             else
             {
-                TempData["stop"] = "username and password are incorrect";
+                TempData["Stop"] = "username and password are incorrect";
             }
         }
 

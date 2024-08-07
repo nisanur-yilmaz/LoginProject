@@ -76,7 +76,6 @@ ViewData["Title"] = "Home page";
         <input class="input1"asp-for="Name" placeholder="Enter Name" autocomplete="off"/>
         <small>@TempData["Name.Error"]</small>
         <small>@TempData["UserName.Error"]</small>
-        <small>@TempData["no"]</small>
         <small class="smallN">@TempData["Welcome"]</small>
 
 
@@ -92,7 +91,7 @@ ViewData["Title"] = "Home page";
         <label asp-for="PasswordAgain"></label>
         <input class="input1" asp-for="PasswordAgain" placeholder="Enter Password Again" autocomplete="off"type="password"/>
         <small>@TempData["PasswordAgain.Error"]</small>
-        <small>@TempData["stop"]</small>
+        <small>@TempData["Stop"]</small>
     </div>
     <div class="gender">
         <label asp-for="Gender"></label>

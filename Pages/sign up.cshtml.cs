@@ -31,24 +31,24 @@ public class sign_up : PageModel
         TempData["Password"] = Password;
         TempData["PasswordAgain"] = PasswordAgain;
         TempData["Gender"] = Gender;
-        var promblemYok = true;
+        var problemYok = true;
         if (string.IsNullOrEmpty(Name))
         {
             TempData["Name.Error"] = "Name cannot be empty";
-            promblemYok = false;
+            problemYok = false;
         }
 
         if (string.IsNullOrEmpty(Password))
         {
             TempData["Password.Error"] = "Password cannot be empty";
-            promblemYok = false;
+            problemYok = false;
         }
         else
         {
             if (Password.Length < 6)
             {
                 TempData["Password.Error"] = "Password length should not be less than 6 digits";
-                promblemYok = false;
+                problemYok = false;
             }
             else
             {
@@ -80,30 +80,30 @@ public class sign_up : PageModel
                 {
                     TempData["Password.Error"] =
                         "The password must contain at least 1 number, 1 lowercase letter, 1 uppercase letter and 1 symbol.";
-                    promblemYok = false;
+                    problemYok = false;
                 }
             }
         }
 
         if (string.IsNullOrEmpty(PasswordAgain))
         {
-            TempData["PasswordAgain.Error"] = "Password Aganin cannot be empty";
-            promblemYok = false;
+            TempData["PasswordAgain.Error"] = "Password Again cannot be empty";
+            problemYok = false;
         }
 
         if (string.IsNullOrEmpty(Gender))
         {
             TempData["Gender.Error"] = "Gender cannot be empty";
-            promblemYok = false;
+            problemYok = false;
         }
 
         if (Password != PasswordAgain)
         {
-            TempData["stop"] = "password does not match";
-            promblemYok = false;
+            TempData["Stop"] = "password does not match";
+            problemYok = false;
         }
 
-        if (promblemYok)
+        if (problemYok)
         {
             var kullanıcıvar = false;
             var result = appDbContext.RunSqlCommand("SELECT * FROM user");

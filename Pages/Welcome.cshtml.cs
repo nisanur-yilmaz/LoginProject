@@ -60,24 +60,21 @@ public class Welcome : PageModel
                 var symbolFound = false;
                 foreach (var letter in Password)
                 {
-                    int letterCode = (int)letter;
-                    if (letter >= '0' && letter <= '9')
+                    switch (letter)
                     {
-                        digitFound = true;
+                        case >= '0' and <= '9':
+                            digitFound = true;
+                            break;
+                        case >= 'a' and <= 'z':
+                            lowerCaseFound = true;
+                            break;
+                        case >= 'A' and <= 'Z':
+                            upperCaseFound = true;
+                            break;
+                        default:
+                            symbolFound = true;
+                            break;
                     }
-                    if (letter >= 'a' && letter <= 'z')
-                    {
-                        lowerCaseFound = true;
-                    }
-                    if (letter >= 'A' && letter <= 'Z')
-                    {
-                        upperCaseFound = true;
-                    }
-                    else
-                    {
-                        symbolFound = true;
-                    }
-
                 }
 
                 if (!digitFound || !lowerCaseFound || !upperCaseFound || !symbolFound)
@@ -96,7 +93,7 @@ public class Welcome : PageModel
 
         if (Password != PasswordAgain)
         {
-            TempData["stop"] = "password does not match";
+            TempData["Stop"] = "password does not match";
             problemYok = false;
         }
 
@@ -115,13 +112,13 @@ public class Welcome : PageModel
             if (kullanıcıvar)
             {
                 TempData["Stop"] = "";
-                Console.WriteLine("Update user SET password=\"{Password}\" WHERE userName =\"{Name}\"");
+                Console.WriteLine($"Update user SET password=\"{Password}\" WHERE userName =\"{Name}\"");
                 appDbContext.RunSqlCommand($"Update user SET password=\"{Password}\" WHERE userName =\"{Name}\"");
                 TempData["PasswordTrue"] = "your password has been change!";
             }
             else
             {
-                TempData["stop"] = "user not found";
+                TempData["Stop"] = "user not found";
             }
             
         }
