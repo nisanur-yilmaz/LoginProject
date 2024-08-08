@@ -1,12 +1,13 @@
 using System.Data;
 using System.Diagnostics.SymbolStore;
+using LoginProject2.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 
 namespace LoginProject2.Pages;
 
-public class sign_up : PageModel
+public class SignUp : PageModel
 {
     public void OnGet()
     {
@@ -19,64 +20,42 @@ public class sign_up : PageModel
 
     private readonly AppDbContext appDbContext;
 
-    public sign_up()
+    public SignUp()
     {
         appDbContext = new AppDbContext();
     }
 
-    public RedirectToPageResult OnPost([FromForm] string Name, [FromForm] string Password,
-        [FromForm] string PasswordAgain, [FromForm] string Gender)
+    public RedirectToPageResult OnPost([FromForm] string name, [FromForm] string password,
+        [FromForm] string passwordAgain, [FromForm] string gender)
     {
-        TempData["Name"] = Name;
-        TempData["Password"] = Password;
-        TempData["PasswordAgain"] = PasswordAgain;
-        TempData["Gender"] = Gender;
+        TempData["Name"] = name;
+        TempData["Password"] = password;
+        TempData["PasswordAgain"] = passwordAgain;
+        TempData["Gender"] = gender;
         var problemYok = true;
-        if (string.IsNullOrEmpty(Name))
+        if (string.IsNullOrEmpty(name))
         {
             TempData["Name.Error"] = "Name cannot be empty";
             problemYok = false;
         }
 
-        if (string.IsNullOrEmpty(Password))
+        if (string.IsNullOrEmpty(password))
         {
             TempData["Password.Error"] = "Password cannot be empty";
             problemYok = false;
         }
         else
         {
-            if (Password.Length < 6)
+            var problemsiz = Helpers.IsPasswordLengthValid(password);
+            if(!problemsiz)
             {
                 TempData["Password.Error"] = "Password length should not be less than 6 digits";
                 problemYok = false;
             }
             else
             {
-                var digitFound = false;
-                var lowerCaseFound = false;
-                var upperCaseFound = false;
-                var symbolFound = false;
-                foreach (var letter in Password)
-                {
-                    switch (letter)
-                    {
-                        case >= '0' and <= '9':
-                            digitFound = true;
-                            break;
-                        case >= 'a' and <= 'z':
-                            lowerCaseFound = true;
-                            break;
-                        case >= 'A' and <= 'Z':
-                            upperCaseFound = true;
-                            break;
-                        default:
-                            symbolFound = true;
-                            break;
-                    }
-                }
-
-
-                if (!digitFound || !lowerCaseFound || !upperCaseFound || !symbolFound)
+                var sifreProblemsiz = Helpers.IsPasswordValid(password);
+                if (!sifreProblemsiz)
                 {
                     TempData["Password.Error"] =
                         "The password must contain at least 1 number, 1 lowercase letter, 1 uppercase letter and 1 symbol.";
@@ -85,19 +64,19 @@ public class sign_up : PageModel
             }
         }
 
-        if (string.IsNullOrEmpty(PasswordAgain))
+        if (string.IsNullOrEmpty(passwordAgain))
         {
             TempData["PasswordAgain.Error"] = "Password Again cannot be empty";
             problemYok = false;
         }
 
-        if (string.IsNullOrEmpty(Gender))
+        if (string.IsNullOrEmpty(gender))
         {
             TempData["Gender.Error"] = "Gender cannot be empty";
             problemYok = false;
         }
 
-        if (Password != PasswordAgain)
+        if (password != passwordAgain)
         {
             TempData["Stop"] = "password does not match";
             problemYok = false;
@@ -109,7 +88,7 @@ public class sign_up : PageModel
             var result = appDbContext.RunSqlCommand("SELECT * FROM user");
             for (int i = 0; i <= result.Count - 1; i++)
             {
-                if (Name == result[i][0])
+                if (name == result[i][0])
                 {
                     kullanıcıvar = true;
                     break;
@@ -118,14 +97,14 @@ public class sign_up : PageModel
 
             if (kullanıcıvar)
             {
-                TempData["UserName.Error"] = $"there is already a user {Name}";
+                TempData["UserName.Error"] = $"there is already a user {name}";
             }
             else
             {
-                TempData["Welcome"] = $"Welcome {Name}!";
+                TempData["Welcome"] = $"Welcome {name}!";
                 TempData["Stop"] = "";
                 appDbContext.RunSqlCommand(
-                    $"INSERT INTO user(userName,password,gender_id)values(\"{Name}\",\"{Password}\",{Gender})");
+                    $"INSERT INTO user(userName,password,gender_id)values(\"{name}\",\"{password}\",{gender})");
             }
         }
 

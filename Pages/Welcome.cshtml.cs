@@ -1,4 +1,5 @@
 using System.Data;
+using LoginProject2.Services;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -35,49 +36,28 @@ public class Welcome : PageModel
         }
     }
 
-    public IActionResult OnPost([FromForm] string Name, [FromForm] string Password, [FromForm] string PasswordAgain)
+    public IActionResult OnPost([FromForm] string Name, [FromForm] string password, [FromForm] string PasswordAgain)
     {
-        TempData["Password"] = Password;
+        TempData["Password"] = password;
         TempData["PasswordAgain"] = PasswordAgain;
         var problemYok = true;
-        if (string.IsNullOrEmpty(Password))
+        if (string.IsNullOrEmpty(password))
         {
             TempData["Password.Error"] = "Password cannot be empty";
             problemYok = false;
         }
         else
         {
-            if (Password.Length < 6)
+            var problemsiz = Helpers.IsPasswordLengthValid(password);
+            if (!problemsiz)
             {
                 TempData["Password.Error"] = "Password length should not be less than 6 digits";
                 problemYok = false;
             }
             else
             {
-                var digitFound = false;
-                var lowerCaseFound = false;
-                var upperCaseFound = false;
-                var symbolFound = false;
-                foreach (var letter in Password)
-                {
-                    switch (letter)
-                    {
-                        case >= '0' and <= '9':
-                            digitFound = true;
-                            break;
-                        case >= 'a' and <= 'z':
-                            lowerCaseFound = true;
-                            break;
-                        case >= 'A' and <= 'Z':
-                            upperCaseFound = true;
-                            break;
-                        default:
-                            symbolFound = true;
-                            break;
-                    }
-                }
-
-                if (!digitFound || !lowerCaseFound || !upperCaseFound || !symbolFound)
+                var sifreProblemsiz = Helpers.IsPasswordValid(password);
+                if (!sifreProblemsiz)
                 {
                     TempData["Password.Error"] =
                         "The password must contain at least 1 number, 1 lowercase letter, 1 uppercase letter and 1 symbol";
@@ -91,7 +71,7 @@ public class Welcome : PageModel
             problemYok = false;
         }
 
-        if (Password != PasswordAgain)
+        if (password != PasswordAgain)
         {
             TempData["Stop"] = "password does not match";
             problemYok = false;
@@ -112,8 +92,8 @@ public class Welcome : PageModel
             if (kullanıcıvar)
             {
                 TempData["Stop"] = "";
-                Console.WriteLine($"Update user SET password=\"{Password}\" WHERE userName =\"{Name}\"");
-                appDbContext.RunSqlCommand($"Update user SET password=\"{Password}\" WHERE userName =\"{Name}\"");
+                Console.WriteLine($"Update user SET password=\"{password}\" WHERE userName =\"{Name}\"");
+                appDbContext.RunSqlCommand($"Update user SET password=\"{password}\" WHERE userName =\"{Name}\"");
                 TempData["PasswordTrue"] = "your password has been change!";
             }
             else
