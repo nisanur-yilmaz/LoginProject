@@ -40,4 +40,18 @@ class Helpers
 
         return problemsiz;
     }
+
+    public static string CreateToken()
+    {
+        var chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        var stringChars = new char[8];
+        var random = new Random();
+
+        for (int i = 0; i < stringChars.Length; i++) {
+            var randomIndex = random.Next(chars.Length);
+            stringChars[i] = chars[randomIndex];
+        }
+
+        return new String(stringChars);
+    }
 }

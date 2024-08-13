@@ -77,11 +77,6 @@
     <h1 class="h1B">Change Password</h1>
 </div>
 <form method="post" asp-page="Welcome">
-    <div hidden>
-        <label asp-for="Name"></label>
-        <input class="input1" asp-for="Name"/>@Model.Name
-    </div>
-    
     <div class="Form-password-passwordAgain">
         <label asp-for="Password"></label>
         <input class="input1" asp-for="Password" placeholder="Enter New Password" autocomplete="off" type="password"/>

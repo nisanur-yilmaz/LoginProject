@@ -10,6 +10,8 @@ public class IndexModel : PageModel
 {
     public string? Name => (string?)TempData[nameof(Name)];
     public string? Password => (string?)TempData[nameof(Password)];
+
+
     private readonly AppDbContext appDbContext;
 
     public IndexModel()
@@ -37,26 +39,17 @@ public class IndexModel : PageModel
         }
 
         var result = appDbContext.RunSqlCommand("SELECT * FROM user");
-        /*for (int i = 0; i <=result.Count-1; i++)
-        {
-            if (Name == result[i][0] && password == result[i][2])
-            {
-                TempData["Stop"] = "";
-                return RedirectToPage("Welcome" , new{name=$"{Name}", gender=$"{result[i][3]}"} );
-
-            }
-            else
-            {
-                TempData["Stop"] = "username and password are incorrect";
-            }
-        }*/
 
         foreach (var row in result)
         {
             if (Name == row[0] && password == row[2])
             {
                 TempData["Stop"] = "";
-                return RedirectToPage("Welcome", new { name = $"{Name}", gender = $"{row[3]}" });
+                var userId = row[1];
+                var token = Helpers.CreateToken();
+                appDbContext.RunSqlCommand($"INSERT INTO session(userId,token) VALUES({userId},'{token}')");
+                Response.Cookies.Append("LoginProject2AppSessionToken", token);
+                return RedirectToPage("Welcome");
             }
             else
             {
@@ -68,4 +61,3 @@ public class IndexModel : PageModel
         return RedirectToPage("Index");
     }
 }
-

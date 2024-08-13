@@ -17,26 +17,48 @@ public class Welcome : PageModel
     {
         appDbContext = new AppDbContext();
     }
+
     public string Name { get; set; }
-    public string Gender{ get; set; }
-    
+    public string Gender { get; set; }
+    public string Id { get; set; }
+
     public void OnGet()
     {
-        var bar = Request.Query["Name"];
-        var gender = Request.Query["Gender"];
-        Name = $"{bar}";
-        if (gender == "1")
-        {
-            Gender = " Bey!";
-        }
+        /* var bar = Request.Query["Name"];
+         var gender = Request.Query["Gender"];
+         Name = $"{bar}";
+         if (gender == "1")
+         {
+             Gender = " Bey!";
+         }
 
-        if (gender == "2")
+         if (gender == "2")
+         {
+             Gender = " Hanım!";
+         }*/
+        var result = appDbContext.RunSqlCommand(
+            "SELECT user.userName,gender.name,session.token FROM user INNER JOIN gender ON user.gender_id=gender.id INNER JOIN session ON user.id=session.userId");
+        var token = Request.Cookies["LoginProject2AppSessionToken"];
+        Console.WriteLine(token);
+        foreach (var row in result)
         {
-            Gender = " Hanım!";
+            if (token == row[2])
+            {
+                Name = row[0];
+                if (row[1] == "female")
+                {
+                    Gender = " hanım";
+                }
+                else
+                {
+                    Gender = " bey";
+                }
+            }
         }
     }
 
-    public IActionResult OnPost([FromForm] string Name, [FromForm] string password, [FromForm] string PasswordAgain)
+
+    public IActionResult OnPost([FromForm] string password, [FromForm] string PasswordAgain)
     {
         TempData["Password"] = password;
         TempData["PasswordAgain"] = PasswordAgain;
@@ -65,6 +87,7 @@ public class Welcome : PageModel
                 }
             }
         }
+
         if (string.IsNullOrEmpty(PasswordAgain))
         {
             TempData["PasswordAgain.Error"] = "Password Again cannot be empty";
@@ -79,31 +102,31 @@ public class Welcome : PageModel
 
         if (problemYok)
         {
-            var kullanıcıvar = false;
-            var result = appDbContext.RunSqlCommand("SELECT * FROM user");
-            for (int i = 0; i <= result.Count-1; i++)
-            {
-                if (Name == result[i][0])
-                {
-                    kullanıcıvar = true;
-                    break;
-                }
-            }
-            if (kullanıcıvar)
-            {
-                TempData["Stop"] = "";
-                Console.WriteLine($"Update user SET password=\"{password}\" WHERE userName =\"{Name}\"");
-                appDbContext.RunSqlCommand($"Update user SET password=\"{password}\" WHERE userName =\"{Name}\"");
-                TempData["PasswordTrue"] = "your password has been change!";
-            }
-            else
-            {
-                TempData["Stop"] = "user not found";
-            }
+            Console.WriteLine("1");
+            var result = appDbContext.RunSqlCommand(
+                "SELECT session.token,session.userId FROM user INNER JOIN session ON user.id=session.userId");
             
+            var token = Request.Cookies["LoginProject2AppSessionToken"];
+            Console.WriteLine("2");
+            foreach (var row in result)
+            {
+                Console.WriteLine("3");
+                Console.WriteLine(row[0]);
+                if (token == row[0])
+                {
+                    Console.WriteLine("4");
+                    var Id = row[1];
+                    Console.WriteLine($"Update user SET password=\"{password}\" WHERE id =\"{Id}\"");
+                    appDbContext.RunSqlCommand($"Update user SET password=\"{password}\" WHERE id =\"{Id}\"");
+                    TempData["PasswordTrue"] = "your password has been changed!";
+                    Console.WriteLine("5");
+                }
+
+            }
+            // todo username e gore degıl, userId ye gore SQL sorgusu atılmalı
+            // todo userId cookıe den alınan bılgı ıle elde edılmelı
         }
-        
+
         return RedirectToPage("Welcome");
     }
-    
 }
