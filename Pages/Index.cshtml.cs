@@ -19,11 +19,20 @@ public class IndexModel : PageModel
         appDbContext = new AppDbContext();
     }
 
-    public void OnGet()
+    public IActionResult OnGet()
     {
+       var token = Request.Cookies["LoginProject2AppSessionToken"];
+        var result2 =
+            appDbContext.RunSqlCommand(
+                $"SELECT session.token FROM user INNER JOIN session ON user.id=session.userId WHERE session.token='{token}'");
+        if (result2.Count > 0)
+        {
+            return RedirectToPage("Welcome");
+        }
+
+        return null;
     }
-
-
+    
     public IActionResult OnPost([FromForm] string Name, [FromForm] string password)
     {
         TempData["Name"] = Name;
@@ -38,14 +47,13 @@ public class IndexModel : PageModel
             TempData["Password.Error"] = "Password cannot be empty";
         }
 
-        var result = appDbContext.RunSqlCommand("SELECT * FROM user");
-
+        var result = appDbContext.User.ToList();
         foreach (var row in result)
         {
-            if (Name == row[0] && password == row[2])
+            if (Name == row.userName && password == row.password)
             {
                 TempData["Stop"] = "";
-                var userId = row[1];
+                var userId = row.id;
                 var token = Helpers.CreateToken();
                 appDbContext.RunSqlCommand($"INSERT INTO session(userId,token) VALUES({userId},'{token}')");
                 Response.Cookies.Append("LoginProject2AppSessionToken", token);

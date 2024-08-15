@@ -20,26 +20,18 @@ public class Welcome : PageModel
 
     public string Name { get; set; }
     public string Gender { get; set; }
-    public string Id { get; set; }
 
-    public void OnGet()
+    public IActionResult OnGet()
     {
-        /* var bar = Request.Query["Name"];
-         var gender = Request.Query["Gender"];
-         Name = $"{bar}";
-         if (gender == "1")
-         {
-             Gender = " Bey!";
-         }
-
-         if (gender == "2")
-         {
-             Gender = " Hanım!";
-         }*/
         var result = appDbContext.RunSqlCommand(
             "SELECT user.userName,gender.name,session.token FROM user INNER JOIN gender ON user.gender_id=gender.id INNER JOIN session ON user.id=session.userId");
         var token = Request.Cookies["LoginProject2AppSessionToken"];
-        Console.WriteLine(token);
+        if (string.IsNullOrEmpty(token))
+        {
+            return RedirectToPage("Index");
+        }
+
+        
         foreach (var row in result)
         {
             if (token == row[2])
@@ -55,6 +47,13 @@ public class Welcome : PageModel
                 }
             }
         }
+
+        if (Name == null)
+        {
+            return RedirectToPage("Index");
+        }
+
+        return null;
     }
 
 
@@ -102,31 +101,35 @@ public class Welcome : PageModel
 
         if (problemYok)
         {
-            Console.WriteLine("1");
+            var kullanıcıYok = true;
             var result = appDbContext.RunSqlCommand(
                 "SELECT session.token,session.userId FROM user INNER JOIN session ON user.id=session.userId");
-            
+
             var token = Request.Cookies["LoginProject2AppSessionToken"];
-            Console.WriteLine("2");
             foreach (var row in result)
             {
-                Console.WriteLine("3");
-                Console.WriteLine(row[0]);
                 if (token == row[0])
                 {
-                    Console.WriteLine("4");
                     var Id = row[1];
                     Console.WriteLine($"Update user SET password=\"{password}\" WHERE id =\"{Id}\"");
                     appDbContext.RunSqlCommand($"Update user SET password=\"{password}\" WHERE id =\"{Id}\"");
                     TempData["PasswordTrue"] = "your password has been changed!";
-                    Console.WriteLine("5");
+                    kullanıcıYok = false;
                 }
-
             }
-            // todo username e gore degıl, userId ye gore SQL sorgusu atılmalı
-            // todo userId cookıe den alınan bılgı ıle elde edılmelı
+
+            if (kullanıcıYok)
+            {
+                return RedirectToPage("Index");
+            }
         }
 
         return RedirectToPage("Welcome");
+    }
+
+    public IActionResult OnGetLogout()
+    {
+        Response.Cookies.Delete("LoginProject2AppSessionToken");
+        return RedirectToPage("Index");
     }
 }

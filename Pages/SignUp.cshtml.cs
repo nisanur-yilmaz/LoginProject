@@ -9,8 +9,18 @@ namespace LoginProject2.Pages;
 
 public class SignUp : PageModel
 {
-    public void OnGet()
+    public IActionResult OnGet()
     {
+        var token = Request.Cookies["LoginProject2AppSessionToken"];
+        var result2 =
+            appDbContext.RunSqlCommand(
+                $"SELECT session.token FROM user INNER JOIN session ON user.id=session.userId WHERE session.token='{token}'");
+        if (result2.Count > 0)
+        {
+            return RedirectToPage("Welcome");
+        }
+
+        return null;
     }
 
     public string? Name => (string?)TempData[nameof(Name)];
@@ -28,6 +38,16 @@ public class SignUp : PageModel
     public RedirectToPageResult OnPost([FromForm] string name, [FromForm] string password,
         [FromForm] string passwordAgain, [FromForm] string gender)
     {
+        var token = Request.Cookies["LoginProject2AppSessionToken"];
+        var result2 =
+            appDbContext.RunSqlCommand(
+                $"SELECT session.token FROM user INNER JOIN session ON user.id=session.userId WHERE session.token='{token}'");
+        if (result2.Count > 0)
+        {
+            return RedirectToPage("Welcome");
+        }
+
+
         TempData["Name"] = name;
         TempData["Password"] = password;
         TempData["PasswordAgain"] = passwordAgain;
@@ -47,7 +67,7 @@ public class SignUp : PageModel
         else
         {
             var problemsiz = Helpers.IsPasswordLengthValid(password);
-            if(!problemsiz)
+            if (!problemsiz)
             {
                 TempData["Password.Error"] = "Password length should not be less than 6 digits";
                 problemYok = false;
@@ -63,6 +83,7 @@ public class SignUp : PageModel
                 }
             }
         }
+
 
         if (string.IsNullOrEmpty(passwordAgain))
         {
@@ -82,13 +103,17 @@ public class SignUp : PageModel
             problemYok = false;
         }
 
+
+
         if (problemYok)
         {
             var kullanıcıvar = false;
-            var result = appDbContext.RunSqlCommand("SELECT * FROM user");
-            for (int i = 0; i <= result.Count - 1; i++)
+            var result =
+                appDbContext.User.ToList();
+
+            foreach (var row in result)
             {
-                if (name == result[i][0])
+                if (name == row.userName)
                 {
                     kullanıcıvar = true;
                     break;
@@ -101,13 +126,19 @@ public class SignUp : PageModel
             }
             else
             {
-                TempData["Welcome"] = $"Welcome {name}!";
                 TempData["Stop"] = "";
                 appDbContext.RunSqlCommand(
-                    $"INSERT INTO user(userName,password,gender_id)values(\"{name}\",\"{password}\",{gender})");
+                    $"INSERT INTO user(userName,password,gender_id)values(\"{name}\",\"{password}\",\"{gender}\")");
+
+                var userIdList = appDbContext.RunSqlCommand($"SELECT id FROM user WHERE userName='{name}'");
+                var userId = userIdList[0][0];
+                var token1 = Helpers.CreateToken();
+                appDbContext.RunSqlCommand($"INSERT INTO session(userId,token) VALUES ({userId}, '{token1}');");
+                Response.Cookies.Append("LoginProject2AppSessionToken", token1);
+                return RedirectToPage("Welcome");
             }
         }
 
-        return RedirectToPage("sign up");
+        return RedirectToPage("SignUp");
     }
 }

@@ -5,72 +5,87 @@
 
 @section css
 {
-    <style xmlns="http://www.w3.org/1999/html">
-        [hidden] {
-            display: none !important;
-        }
+<style xmlns="http://www.w3.org/1999/html">
+    [hidden] {
+        display: none !important;
+    }
 
-        div
-        {
-            display: flex;
-            align-items: center;
-            flex-direction: column;
-        }
-        .h1B
-        {
-            font-size: 60px;
-            color: limegreen;
-            margin: auto;
-            padding:10px;
-        }
-        .SaveButton
-        {
-            padding: 12px;
-            background: limegreen;
-            color: white;
-            border-radius: 5px;
-            border: limegreen;
-            margin-top: 5px;
-        }
-        .SaveButton:hover
-        {
-            padding: 12px;
-            background: peru;
-            color: white;
-            border-radius: 5px;
-            margin-top: 5px;
-        }
-        .input1
-        {
-            width: 700px;
-            height: 30px;
-            border: 1px solid #e6e6e6;
-        }
-        label
-        {
-            margin-bottom: 5px;
-        }
-        small
-        {
-            color: red;
-        }
-        .smallTrue
-        {
-            color: limegreen;
-        }
-        li
-        {
-            position: absolute;
-            left: 45px;
-            top: 30px;
-        }
-        .Form-password-passwordAgain
-        {
-            align-items: flex-start;
-        }
+    div {
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+    }
+
+    .h1B {
+        font-size: 60px;
+        color: limegreen;
+        margin: auto;
+        padding: 10px;
+    }
+
+    .SaveButton {
+        padding: 12px;
+        background: limegreen;
+        color: white;
+        border-radius: 5px;
+        border: limegreen;
+        margin-top: 5px;
+    }
+
+    .SaveButton:hover {
+        padding: 12px;
+        background: peru;
+        color: white;
+        border-radius: 5px;
+        margin-top: 5px;
+    }
+
+    .logoutButton {
+        border-radius: 5px;
+        margin-top: 5px;
+        padding: 7px;
+        background: black;;
+        color: whitesmoke;
+        border:black;
+    }.logoutButton:hover {
+        border-radius: 5px;
+        margin-top: 5px;
+        padding: 7px;
+        background: #258cfb;;
+        color: whitesmoke;
         
-    
-    </style>
+    }
+
+    .input1 {
+        width: 700px;
+        height: 30px;
+        border: 1px solid #e6e6e6;
+    }
+
+    label {
+        margin-bottom: 5px;
+    }
+
+    small {
+        color: red;
+    }
+
+    .smallTrue {
+        color: limegreen;
+    }
+
+    li {
+        position: absolute;
+        left: 45px;
+        top: 30px;
+    }
+
+    .Form-password-passwordAgain {
+        align-items: flex-start;
+    }
+
+
+</style>
 }
 
 <div>
@@ -85,7 +100,8 @@
 
     <div class="Form-password-passwordAgain">
         <label asp-for="PasswordAgain"></label>
-        <input class="input1"asp-for="PasswordAgain" placeholder="Enter New Password Again" autocomplete="off" type="password"/>
+        <input class="input1" asp-for="PasswordAgain" placeholder="Enter New Password Again" autocomplete="off"
+               type="password"/>
         <small>@TempData["PasswordAgain.Error"]</small>
         <small>@TempData["Stop"]</small>
     </div>
@@ -95,3 +111,6 @@
     <small class="smallTrue">@TempData["PasswordTrue"]</small>
 
 </form>
+<button class="logoutButton">
+    <a asp-page-handler="Logout" class="logoutButton">Logout</a>
+</button>

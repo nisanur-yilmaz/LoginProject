@@ -13,7 +13,7 @@ public class AppDbContext : DbContext
         // var folder = Environment.SpecialFolder.LocalApplicationData;
         // var path = Environment.GetFolderPath(folder);
         // DbPath = System.IO.Path.Join(path, "lesson1.db");
-        DbPath = "/Users/nisanur/Desktop/c sharp/LoginProject2/LoginProject2/lesson1.db";
+        DbPath = "lesson1.db";
     }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) =>
@@ -41,4 +41,16 @@ public class AppDbContext : DbContext
 
         return resultArray;
     }
+
+    public DbSet<User> User { get; set; }
+}
+
+public class User
+{
+    public String userName { get; set; }
+    public int id { get; set; }
+    public String password { get; set; }
+    public int  gender_id { get; set; }
+    
+    
 }
